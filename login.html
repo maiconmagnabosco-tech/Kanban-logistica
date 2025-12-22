@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Kanban MAGNABOSCO</title>
+    <link rel="stylesheet" href="./login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-background"></div>
+
+        <div class="login-card">
+            <div class="logo-section">
+                <div class="truck-icon">🚛</div>
+                <h1>MAGNABOSCO</h1>
+                <p class="subtitle">Kanban Logística</p>
+            </div>
+
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="email">
+                        <span class="icon">📧</span>
+                        E-mail Corporativo
+                    </label>
+                    <input type="email" id="email" name="email" placeholder="seu.nome@magnabosco.com.br" required
+                        autocomplete="email">
+                    <span class="error-message" id="email-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <span class="icon">🔒</span>
+                        Senha
+                    </label>
+                    <input type="password" id="password" name="password" placeholder="Digite sua senha" required
+                        autocomplete="current-password">
+                    <span class="error-message" id="password-error"></span>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    <span>Entrar</span>
+                    <span class="arrow">→</span>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>🚚 Acesso restrito aos colaboradores MAGNABOSCO</p>
+            </div>
+        </div>
+
+        <div class="decorative-elements">
+            <div class="route-line"></div>
+            <div class="delivery-icon">📦</div>
+        </div>
+    </div>
+
+    <script src="./auth.js"></script>
+</body>
+
+</html>

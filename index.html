@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanban Logistica</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <!-- Authentication Check -->
+    <script>
+        // Check authentication before loading the app
+        const isAuthenticated = localStorage.getItem('kanban_auth') === 'true';
+        if (!isAuthenticated) {
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- Dashboard & Controls -->
+        <header class="header">
+            <div class="top-bar">
+                <h1>Kanban <span style="color:var(--accent); font-weight:700">Logística</span> <img src="./logo.png"
+                        alt="MAGNABOSCO" class="header-logo"></h1>
+                <div class="controls-row">
+                    <span id="user-info" class="user-info"></span>
+                    <button id="btn-new-project" class="btn-pri">Novo Projeto</button>
+                    <button id="btn-refresh" class="icon-btn" title="Atualizar dados da planilha"><ion-icon
+                            name="refresh-outline"></ion-icon></button>
+                    <select id="sector-selector" class="project-selector">
+                        <option value="" selected>Todos os Setores</option>
+                    </select>
+                    <select id="project-selector" class="project-selector">
+                        <option value="" selected>Todos os Projetos</option>
+                    </select>
+                    <select id="responsible-selector" class="project-selector">
+                        <option value="" selected>Todos os Responsáveis</option>
+                    </select>
+                    <button id="btn-logout" class="btn-logout" title="Sair">
+                        <ion-icon name="log-out-outline"></ion-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div class="dashboard" id="dashboard">
+                <div class="dash-card">
+                    <span class="dash-label">Projetos Totais</span>
+                    <span class="dash-value" id="stat-total">0</span>
+                </div>
+                <div class="dash-card">
+                    <span class="dash-label">Concluídos (100%)</span>
+                    <span class="dash-value" id="stat-completed">0</span>
+                </div>
+                <div class="dash-card">
+                    <span class="dash-label">Aderência de Conclusão</span>
+                    <span class="dash-value" id="stat-adherence">0%</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Kanban Board -->
+        <div class="board" id="board">
+            <!-- Columns injected by JS -->
+        </div>
+    </div>
+
+    <!-- Add/Edit Task Modal -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal">
+            <h2 id="modal-title">Nova Tarefa</h2>
+            <input type="hidden" id="inp-id"> <!-- Hidden ID for edits -->
+
+            <div class="form-group">
+                <label>Projeto</label>
+                <input type="text" id="inp-project" placeholder="Ex: Entrega SP" list="project-list">
+                <datalist id="project-list"></datalist>
+            </div>
+            <div class="form-group">
+                <label>Tarefa</label>
+                <input type="text" id="inp-content" placeholder="Descrição da atividade">
+            </div>
+            <div class="form-group row">
+                <div>
+                    <label>Setor</label>
+                    <input type="text" id="inp-sector" placeholder="Ex: Frota">
+                </div>
+                <div>
+                    <label>Responsável</label>
+                    <input type="text" id="inp-responsible" placeholder="Nome">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div>
+                    <label>Data Início</label>
+                    <input type="date" id="inp-start">
+                </div>
+                <div>
+                    <label>Data Fim Prev.</label>
+                    <input type="date" id="inp-end">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="btn-cancel" class="btn-sec">Cancelar</button>
+                <button id="btn-save" class="btn-pri">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./main.js"></script>
+</body>
+
+</html>
