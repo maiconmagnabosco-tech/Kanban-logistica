@@ -4,63 +4,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Kanban MAGNABOSCO</title>
-    <link rel="stylesheet" href="./login.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Login - Kanban Logística</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --primary-color: #3b82f6;
+            --text-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-card {
+            background-color: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            border: 1px solid #333;
+        }
+
+        .logo {
+            width: 120px;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: white;
+            font-family: inherit;
+            box-sizing: border-box;
+            /* Importante para não quebrar o layout */
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        button:hover {
+            filter: brightness(1.1);
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="login-container">
-        <div class="login-background"></div>
 
-        <div class="login-card">
-            <div class="logo-section">
-                <div class="truck-icon">🚛</div>
-                <h1>MAGNABOSCO</h1>
-                <p class="subtitle">Kanban Logística</p>
-            </div>
+    <div class="login-card">
+        <!-- Se não tiver a imagem logo.png, vai aparecer só o texto -->
+        <img src="./logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
+        <h2>Acesso Logística</h2>
 
-            <form id="login-form" class="login-form">
-                <div class="form-group">
-                    <label for="email">
-                        <span class="icon">📧</span>
-                        E-mail Corporativo
-                    </label>
-                    <input type="email" id="email" name="email" placeholder="seu.nome@magnabosco.com.br" required
-                        autocomplete="email">
-                    <span class="error-message" id="email-error"></span>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">
-                        <span class="icon">🔒</span>
-                        Senha
-                    </label>
-                    <input type="password" id="password" name="password" placeholder="Digite sua senha" required
-                        autocomplete="current-password">
-                    <span class="error-message" id="password-error"></span>
-                </div>
-
-                <button type="submit" class="btn-login">
-                    <span>Entrar</span>
-                    <span class="arrow">→</span>
-                </button>
-            </form>
-
-            <div class="login-footer">
-                <p>🚚 Acesso restrito aos colaboradores MAGNABOSCO</p>
-            </div>
-        </div>
-
-        <div class="decorative-elements">
-            <div class="route-line"></div>
-            <div class="delivery-icon">📦</div>
-        </div>
+        <form id="login-form">
+            <input type="email" id="email" placeholder="E-mail" required>
+            <input type="password" id="password" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
+        </form>
+        <p class="error-msg" id="error-msg">Usuário ou senha inválidos</p>
     </div>
 
-    <script src="./auth.js"></script>
+    <script>
+        // Lógica de Login Simples
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // --- CONFIGURAÇÃO DE USUÁRIOS ---
+            // Você pode adicionar mais usuários aqui se quiser
+            const validUsers = [
+                { user: 'admin@magnabosco.com', pass: '123456' },
+                { user: 'maicon@magnabosco.com', pass: 'admin' },
+                { user: 'teste@teste.com', pass: '123' } // Usuário de teste fácil
+            ];
+
+            const isValid = validUsers.find(u => u.user === email && u.pass === password);
+
+            if (isValid) {
+                // Salva que o usuário está logado
+                localStorage.setItem('kanban_auth', 'true');
+                localStorage.setItem('kanban_user', email);
+
+                // Redireciona para o painel principal
+                window.location.href = 'index.html';
+            } else {
+                const errorEl = document.getElementById('error-msg');
+                errorEl.style.display = 'block';
+                errorEl.innerText = "Senha incorreta (Tente: teste@teste.com / 123)";
+            }
+        });
+    </script>
 </body>
 
 </html>
