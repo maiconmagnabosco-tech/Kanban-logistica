@@ -1,9 +1,9 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbw3Qd94WSi6jYw0utA6XDNdr2ieCeqrbaF5UODyRQw3s0axroX951WQ1GzM-oYj-4E/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxhSdNViygF4gGPP28lmun2nad_BIzVV0_l-xkWvk5lDhU5dctAiQ5tho0qJDQNkNvX/exec';
 
 const COLUMNS = [
-    { id: 'todo', title: 'Não Iniciado', color: '#ef4444' },
-    { id: 'inprogress', title: 'Em Andamento', color: '#f59e0b' },
-    { id: 'done', title: 'Concluído', color: '#10b981' }
+    { id: 'todo', title: 'Não Iniciado', color: '#ef4444' }, // Vermelho
+    { id: 'inprogress', title: 'Em Andamento', color: '#f59e0b' }, // Laranja
+    { id: 'done', title: 'Concluído', color: '#10b981' } // Verde
 ];
 
 class App {
@@ -150,17 +150,17 @@ class App {
     }
 
     renderDashboard() {
-        // If filtered by Responsible or Sector, adherence reflects ONLY their tasks
+        // Filter tasks based on current filters
         let filteredTasks = this.tasks;
+        if (this.currentProject) filteredTasks = filteredTasks.filter(t => t.project === this.currentProject);
         if (this.currentResponsible) filteredTasks = filteredTasks.filter(t => t.responsible === this.currentResponsible);
         if (this.currentSector) filteredTasks = filteredTasks.filter(t => t.sector === this.currentSector);
 
-        // Projects calculation is trickier when filtered
-        // We look at projects where the selected person/sector has ANY task
+        // Get unique projects from filtered tasks
         const relevantProjects = [...new Set(filteredTasks.map(t => t.project).filter(p => p))];
         const totalProjectsCount = relevantProjects.length;
 
-        // A project is "100% complete" for this view if ALL tasks in that project (assigned to this person/sector) are done
+        // A project is "100% complete" if ALL its tasks are done
         let completedProjectsCount = 0;
         relevantProjects.forEach(projectName => {
             const projectTasks = filteredTasks.filter(t => t.project === projectName);
@@ -170,14 +170,27 @@ class App {
             }
         });
 
-        // Overall adherence: tasks done vs total tasks assigned to the filters
-        const totalTasksCount = filteredTasks.length;
-        const doneTasksCount = filteredTasks.filter(t => t.columnId === 'done').length;
-        const adherence = totalTasksCount === 0 ? 0 : Math.round((doneTasksCount / totalTasksCount) * 100);
+        // Adherence: completed projects / total projects
+        const adherenceValue = totalProjectsCount === 0 ? 0 : (completedProjectsCount / totalProjectsCount) * 100;
+        const adherence = Math.round(adherenceValue * 100) / 100; // Mantém 2 casas decimais
 
         document.getElementById('stat-total').innerText = totalProjectsCount;
         document.getElementById('stat-completed').innerText = completedProjectsCount;
-        document.getElementById('stat-adherence').innerText = `${adherence}%`;
+        
+        const adherenceEl = document.getElementById('stat-adherence');
+        adherenceEl.innerText = `${adherence}%`;
+        
+        // Aplicar cor baseada na aderência
+        adherenceEl.className = 'dash-value adherence';
+        if (adherence === 100) {
+            adherenceEl.style.color = '#10b981'; // Verde
+        } else if (adherence >= 91) {
+            adherenceEl.style.color = '#3b82f6'; // Azul (91 até 99.99%)
+        } else if (adherence >= 76) {
+            adherenceEl.style.color = '#f59e0b'; // Laranja (76 até 90.99%)
+        } else {
+            adherenceEl.style.color = '#ef4444'; // Vermelho (0 até 75.99%)
+        }
     }
 
     renderBoard() {

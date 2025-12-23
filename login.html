@@ -9,32 +9,130 @@
     <style>
         :root {
             --bg-color: #121212;
-            --surface-color: #1e1e1e;
-            --primary-color: #3b82f6;
+            --surface-color: rgba(18, 18, 18, 0.95);
+            --primary-color: #38bdf8;
             --text-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
+            background-color: #000;
             color: var(--text-color);
             font-family: 'Outfit', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background com carreta frigorífica */
+        .login-background {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(13, 13, 13, 0.6) 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><path d="M100 400 L1100 400 L1100 500 L100 500 Z" fill="%23ffffff" opacity="0.05"/><text x="600" y="350" font-size="200" text-anchor="middle" fill="%23ffffff" opacity="0.08">🚛</text></svg>');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+
+        /* Caixas de entregas flutuando */
+        .floating-boxes {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .floating-box {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.15;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-box:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-box:nth-child(2) {
+            top: 20%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        .floating-box:nth-child(3) {
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 2s;
+        }
+
+        .floating-box:nth-child(4) {
+            bottom: 15%;
+            right: 10%;
+            animation-delay: 3s;
+        }
+
+        .floating-box:nth-child(5) {
+            top: 50%;
+            left: 5%;
+            animation-delay: 4s;
+        }
+
+        .floating-box:nth-child(6) {
+            top: 60%;
+            right: 5%;
+            animation-delay: 5s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(5deg);
+            }
         }
 
         .login-card {
-            background-color: var(--surface-color);
+            position: relative;
+            z-index: 10;
+            background: var(--surface-color);
+            backdrop-filter: blur(20px);
             padding: 2.5rem;
-            border-radius: 12px;
+            border-radius: 24px;
             width: 100%;
-            max-width: 400px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            max-width: 450px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(56, 189, 248, 0.1);
             text-align: center;
-            border: 1px solid #333;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .logo {
@@ -45,41 +143,62 @@
         h2 {
             margin-bottom: 1.5rem;
             font-weight: 600;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 1rem;
-            background: #2d2d2d;
-            border: 1px solid #444;
-            border-radius: 6px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             color: white;
             font-family: inherit;
+            font-size: 1rem;
             box-sizing: border-box;
-            /* Importante para não quebrar o layout */
+            transition: all 0.3s;
+            outline: none;
         }
 
         input:focus {
-            outline: none;
             border-color: var(--primary-color);
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
         }
 
         button {
             width: 100%;
-            padding: 12px;
+            padding: 1rem 2rem;
             background-color: var(--primary-color);
-            color: white;
+            color: #000;
             border: none;
-            border-radius: 6px;
+            border-radius: 12px;
             font-weight: 600;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: 0.2s;
-            margin-top: 0.5rem;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
         }
 
         button:hover {
-            filter: brightness(1.1);
+            background: #22d3ee;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         .error-msg {
@@ -87,55 +206,122 @@
             font-size: 0.9rem;
             margin-top: 1rem;
             display: none;
+            min-height: 1.2rem;
+        }
+
+        .error-msg.show {
+            display: block;
         }
     </style>
 </head>
 
 <body>
+    <div class="login-background"></div>
+    <div class="floating-boxes">
+        <div class="floating-box">📦</div>
+        <div class="floating-box">📦</div>
+        <div class="floating-box">📦</div>
+        <div class="floating-box">📦</div>
+        <div class="floating-box">📦</div>
+        <div class="floating-box">📦</div>
+    </div>
 
     <div class="login-card">
-        <!-- Se não tiver a imagem logo.png, vai aparecer só o texto -->
         <img src="./logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
         <h2>Acesso Logística</h2>
 
         <form id="login-form">
-            <input type="email" id="email" placeholder="E-mail" required>
-            <input type="password" id="password" placeholder="Senha" required>
+            <div class="form-group">
+                <input type="email" id="email" placeholder="E-mail (@transmagnabosco.com.br)" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" placeholder="Senha" required autocomplete="current-password">
+            </div>
             <button type="submit">Entrar</button>
         </form>
-        <p class="error-msg" id="error-msg">Usuário ou senha inválidos</p>
+        <p class="error-msg" id="error-msg"></p>
     </div>
 
     <script>
-        // Lógica de Login Simples
+        // Configuração de autenticação
+        const AUTH_DOMAIN = '@transmagnabosco.com.br';
+        const AUTH_PASSWORD = 'lositique25';
+
+        // Função para validar email
+        function validateEmail(email) {
+            const emailLower = email.toLowerCase().trim();
+            if (!emailLower.endsWith(AUTH_DOMAIN)) {
+                return { valid: false, message: `E-mail deve ser do domínio ${AUTH_DOMAIN}` };
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailLower)) {
+                return { valid: false, message: 'Formato de e-mail inválido' };
+            }
+            return { valid: true, message: '' };
+        }
+
+        // Função para mostrar erro
+        function showError(message) {
+            const errorEl = document.getElementById('error-msg');
+            if (message) {
+                errorEl.textContent = message;
+                errorEl.classList.add('show');
+            } else {
+                errorEl.textContent = '';
+                errorEl.classList.remove('show');
+            }
+        }
+
+        // Lógica de Login
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
+            showError('');
 
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
+            const submitButton = e.target.querySelector('button[type="submit"]');
 
-            // --- CONFIGURAÇÃO DE USUÁRIOS ---
-            // Você pode adicionar mais usuários aqui se quiser
-            const validUsers = [
-                { user: 'admin@magnabosco.com', pass: '123456' },
-                { user: 'maicon@magnabosco.com', pass: 'admin' },
-                { user: 'teste@teste.com', pass: '123' } // Usuário de teste fácil
-            ];
-
-            const isValid = validUsers.find(u => u.user === email && u.pass === password);
-
-            if (isValid) {
-                // Salva que o usuário está logado
-                localStorage.setItem('kanban_auth', 'true');
-                localStorage.setItem('kanban_user', email);
-
-                // Redireciona para o painel principal
-                window.location.href = 'index.html';
-            } else {
-                const errorEl = document.getElementById('error-msg');
-                errorEl.style.display = 'block';
-                errorEl.innerText = "Senha incorreta (Tente: teste@teste.com / 123)";
+            // Validar email
+            const emailValidation = validateEmail(email);
+            if (!emailValidation.valid) {
+                showError(emailValidation.message);
+                return;
             }
+
+            // Validar senha
+            if (password !== AUTH_PASSWORD) {
+                showError('Senha incorreta');
+                return;
+            }
+
+            // Mostrar loading
+            submitButton.disabled = true;
+            submitButton.textContent = 'Entrando...';
+
+            // Simular delay de autenticação
+            setTimeout(() => {
+                // Salvar autenticação
+                localStorage.setItem('kanban_auth', 'true');
+                localStorage.setItem('kanban_user', email.toLowerCase());
+
+                // Redirecionar
+                window.location.href = 'index.html';
+            }, 800);
+        });
+
+        // Auto-preenchimento do domínio quando o usuário começa a digitar
+        document.getElementById('email').addEventListener('blur', function() {
+            const value = this.value.trim();
+            if (value && !value.includes('@')) {
+                this.value = value + AUTH_DOMAIN;
+            }
+        });
+
+        // Limpar erro ao digitar
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', () => {
+                showError('');
+            });
         });
     </script>
 </body>
