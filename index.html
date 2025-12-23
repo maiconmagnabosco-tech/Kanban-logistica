@@ -16,10 +16,17 @@
     <!-- Authentication Check -->
     <script>
         // Check authentication before loading the app
-        const isAuthenticated = localStorage.getItem('kanban_auth') === 'true';
-        if (!isAuthenticated) {
-            window.location.href = 'login.html';
-        }
+        (function() {
+            // Prevent redirect loop - check if we're already on login page
+            if (window.location.pathname.includes('login.html')) {
+                return;
+            }
+            
+            const isAuthenticated = localStorage.getItem('kanban_auth') === 'true';
+            if (!isAuthenticated) {
+                window.location.replace('login.html');
+            }
+        })();
     </script>
 </head>
 

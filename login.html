@@ -243,6 +243,14 @@
     </div>
 
     <script>
+        // Verificar se já está autenticado - evitar loop
+        (function() {
+            const isAuthenticated = localStorage.getItem('kanban_auth') === 'true';
+            if (isAuthenticated && !window.location.pathname.includes('login.html')) {
+                window.location.replace('index.html');
+            }
+        })();
+
         // Configuração de autenticação
         const AUTH_DOMAIN = '@transmagnabosco.com.br';
         const AUTH_PASSWORD = 'lositique25';

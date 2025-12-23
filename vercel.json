@@ -5,6 +5,14 @@
     "outputDirectory": ".",
     "routes": [
         {
+            "src": "/login.html",
+            "dest": "/login.html"
+        },
+        {
+            "src": "/index.html",
+            "dest": "/index.html"
+        },
+        {
             "src": "/(.*)",
             "dest": "/index.html"
         }
