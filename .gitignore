@@ -1,1 +1,4 @@
 .vercel
+config.js
+*.log
+.env

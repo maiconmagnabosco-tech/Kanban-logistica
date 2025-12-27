@@ -1,4 +1,46 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbxhSdNViygF4gGPP28lmun2nad_BIzVV0_l-xkWvk5lDhU5dctAiQ5tho0qJDQNkNvX/exec';
+// Configuração da API - será carregada do config.js ou da API route
+let sheetsAPI = null;
+
+// Função para carregar configuração (prioriza variáveis de ambiente via API, depois config.js local)
+async function loadConfig() {
+    // Tentar carregar da API route primeiro (produção no Vercel)
+    try {
+        const response = await fetch('/api/config');
+        if (response.ok) {
+            const config = await response.json();
+            if (config.SPREADSHEET_ID && config.API_KEY) {
+                console.log('Configuração carregada da API route (Vercel)');
+                return config;
+            }
+        }
+    } catch (error) {
+        // Se falhar, tentar config.js local (desenvolvimento)
+        console.log('API route não disponível, usando config.js local');
+    }
+
+    // Fallback para config.js local (desenvolvimento)
+    if (typeof CONFIG !== 'undefined' && CONFIG.SPREADSHEET_ID && CONFIG.API_KEY) {
+        console.log('Configuração carregada do config.js local');
+        return CONFIG;
+    }
+
+    return null;
+}
+
+// Função para inicializar a API
+async function initializeAPI() {
+    const config = await loadConfig();
+    
+    if (config && config.SPREADSHEET_ID && config.API_KEY) {
+        sheetsAPI = new SheetsAPI(config);
+        return true;
+    } else {
+        console.error('CONFIG não encontrado ou incompleto. Verifique:');
+        console.error('1. Variáveis de ambiente no Vercel (Settings → Environment Variables)');
+        console.error('2. Arquivo config.js local (para desenvolvimento)');
+        return false;
+    }
+}
 
 const COLUMNS = [
     { id: 'todo', title: 'Não Iniciado', color: '#ef4444' }, // Vermelho
@@ -17,6 +59,13 @@ class App {
     }
 
     async init() {
+        // Inicializar API antes de usar
+        const apiInitialized = await initializeAPI();
+        if (!apiInitialized) {
+            alert('Erro: Configuração da API não encontrada.\n\nVerifique:\n1. Variáveis de ambiente no Vercel\n2. Arquivo config.js local');
+            return;
+        }
+
         this.setupModal();
         this.setupFilters();
         this.displayUserInfo();
@@ -52,16 +101,21 @@ class App {
 
     async fetchData() {
         try {
-            const res = await fetch(API_URL + '?t=' + Date.now());
-            const data = await res.json();
-            if (data.tasks) {
-                this.tasks = data.tasks;
-                // Initial update based on potentially stored project
-                this.updateSelectors();
-                this.renderDashboard();
-                this.renderBoard();
+            if (!sheetsAPI) {
+                throw new Error('API não inicializada. Verifique se config.js está configurado corretamente.');
             }
-        } catch (err) { console.error(err); }
+
+            const tasks = await sheetsAPI.fetchTasks();
+            this.tasks = tasks;
+            
+            // Initial update based on potentially stored project
+            this.updateSelectors();
+            this.renderDashboard();
+            this.renderBoard();
+        } catch (err) {
+            console.error('Erro ao buscar dados:', err);
+            alert('Erro ao carregar dados. Verifique sua conexão e configuração da API.');
+        }
     }
 
     setupFilters() {
@@ -425,25 +479,15 @@ class App {
         if (refreshBtn) refreshBtn.classList.add('syncing');
 
         try {
-            // Prepare data for Google Script
-            const payload = {
-                tasks: this.tasks.map(t => ({
-                    ...t,
-                    id: String(t.id) // Ensure ID is string on backend too
-                }))
-            };
+            if (!sheetsAPI) {
+                throw new Error('API não inicializada. Verifique se config.js está configurado corretamente.');
+            }
 
-            await fetch(API_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
+            await sheetsAPI.saveTasks(this.tasks);
             console.log('Sync successful');
         } catch (e) {
             console.error('Sync failed:', e);
-            alert('Erro ao salvar dados. Verifique sua conexão.');
+            alert('Erro ao salvar dados: ' + (e.message || 'Verifique sua conexão e configuração.'));
         } finally {
             this.isSyncing = false;
             if (refreshBtn) refreshBtn.classList.remove('syncing');

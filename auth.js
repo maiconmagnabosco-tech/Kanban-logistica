@@ -1,7 +1,7 @@
 // Authentication Configuration
 const AUTH_CONFIG = {
     domain: '@transmagnabosco.com.br',
-    password: 'lositique25',
+    password: 'base25',
     sessionKey: 'kanban_auth',
     userKey: 'kanban_user'
 };

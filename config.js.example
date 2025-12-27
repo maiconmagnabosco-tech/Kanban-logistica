@@ -1,0 +1,19 @@
+// Arquivo de exemplo de configuração
+// Copie este arquivo para config.js e preencha com suas credenciais
+// IMPORTANTE: O arquivo config.js está no .gitignore e NÃO será commitado
+
+const CONFIG = {
+    // ID da sua planilha Google Sheets
+    // Encontre no URL: https://docs.google.com/spreadsheets/d/1yDp_Nmsz9Ir_SFFtzMwP_BQnJ2XmqJlZn35Zf-4wBwc/edit
+    SPREADSHEET_ID: '1yDp_Nmsz9Ir_SFFtzMwP_BQnJ2XmqJlZn35Zf-4wBwc',
+    
+    // Sua chave de API do Google Cloud Console (apenas para LEITURA)
+    // NUNCA compartilhe ou faça commit deste arquivo!
+    API_KEY: 'AIzaSyDrg0PNmgX8RTq9d_eG16kOMls0t4Biykw',
+    
+    // URL do Google Apps Script para ESCRITA (mais seguro)
+    // Crie um Google Apps Script e publique como Web App
+    // Use a URL gerada aqui
+    WRITE_PROXY_URL: 'https://script.google.com/macros/s/AKfycby4mEJALHkkk7yyoYvenaJns8zsY37uGTxBMu6vXKWGEJ3Nd-nejeKE4ynLSDySb0JX/exec'
+};
+

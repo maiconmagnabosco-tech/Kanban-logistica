@@ -16,17 +16,10 @@
     <!-- Authentication Check -->
     <script>
         // Check authentication before loading the app
-        (function() {
-            // Prevent redirect loop - check if we're already on login page
-            if (window.location.pathname.includes('login.html')) {
-                return;
-            }
-            
-            const isAuthenticated = localStorage.getItem('kanban_auth') === 'true';
-            if (!isAuthenticated) {
-                window.location.replace('login.html');
-            }
-        })();
+        const isAuthenticated = localStorage.getItem('kanban_auth') === 'true';
+        if (!isAuthenticated) {
+            window.location.href = 'login.html';
+        }
     </script>
 </head>
 
@@ -35,7 +28,8 @@
         <!-- Dashboard & Controls -->
         <header class="header">
             <div class="top-bar">
-                <h1>Kanban Logistica | MAGNABOCO</h1>
+                <h1>Kanban <span style="color:var(--accent); font-weight:700">Logística</span> <img src="./logo.png"
+                        alt="MAGNABOSCO" class="header-logo"></h1>
                 <div class="controls-row">
                     <span id="user-info" class="user-info"></span>
                     <button id="btn-new-project" class="btn-pri">Novo Projeto</button>
@@ -120,6 +114,9 @@
         </div>
     </div>
 
+    <!-- Scripts na ordem correta -->
+    <script src="./config.js"></script>
+    <script src="./sheets-api.js"></script>
     <script src="./main.js"></script>
 </body>
 
